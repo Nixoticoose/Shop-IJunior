@@ -21,8 +21,8 @@
                 {
                     if (CheckForMoneyPlayer(itemToSell.Price, player.Money) == true)
                     {
-                        player.WithdrawMoney(itemToSell.Price);
-                        trader.AddMoney(itemToSell.Price);
+                        player.WithdrawMoney(itemToSell);
+                        trader.AddMoney(itemToSell);
 
                         player.Inventory.AddItem(itemToSell);
                         trader.ItemsToSell.RemoveItem(itemToSell);

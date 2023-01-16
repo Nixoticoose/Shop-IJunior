@@ -11,14 +11,14 @@
         public string Name { get; protected set; }
         public int Money { get; protected set; }
 
-        public virtual void WithdrawMoney(int money)
+        public virtual void WithdrawMoney(in Item itemOnSale)
         {
-            Money -= money;
+            Money -= itemOnSale.Price;
         }
 
-        public virtual void AddMoney(int money)
+        public virtual void AddMoney(in Item itemOnSale)
         {
-            Money += money;
+            Money += itemOnSale.Price;
         }
     }
 }
