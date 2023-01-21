@@ -34,7 +34,7 @@ namespace Task.Shop
 
         public void RemoveItem(Item item)
         {
-            if (TryGetItem(item) == true)
+            if (_items.Contains(item))
             {
                 _items.Remove(item);
             }
@@ -65,18 +65,6 @@ namespace Task.Shop
                 WriteLine("Вы ввели некорректное число.");
                 return false;
             }
-        }
-
-        private bool TryGetItem(Item item)
-        {
-            bool isGet = false;
-
-            if (_items.Contains(item) == true)
-            {
-                isGet = true;
-            }
-
-            return isGet;
         }
     }
 }

@@ -2,11 +2,16 @@
 {
     internal sealed class Seller : Pawn
     {
-        public Seller(string name, int money) : base(name, money) 
+        public Seller(string name, int money) : base(name, money) { }
+
+        public bool TryGetItemByIndex(int indexItem, out Item itemToSell)
         {
-            ItemsToSell = new Inventory();
+            return _inventory.TryGetItemByIndex(indexItem, out itemToSell);
         }
 
-        public Inventory ItemsToSell { get; init; }
+        public void AddItemToSell(in Item item)
+        {
+            _inventory.AddItem(item);
+        }
     }
 }

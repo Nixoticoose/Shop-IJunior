@@ -1,15 +1,10 @@
 ﻿namespace Task.Shop
 {
-    internal class Deal
+    internal class Shop
     {
-        public Deal(in Seller tradesman, in Player player)
+        public void SellItem(in Seller trader, in Player player)
         {
-            SellItem(tradesman, player);
-        }
-
-        private void SellItem(in Seller trader, in Player player)
-        {
-            trader.ItemsToSell.ShowAllItems();
+            trader.ShowItemsInventory();
             Write("Введите номер предмета, который хотите купить: ");
             string input = ReadLine();
 
@@ -17,15 +12,12 @@
             {
                 int indexItem = numberItem - 1;
 
-                if (trader.ItemsToSell.TryGetItemByIndex(indexItem, out Item itemToSell) == true)
+                if (trader.TryGetItemByIndex(indexItem, out Item itemToSell))
                 {
                     if (CheckForMoneyPlayer(itemToSell.Price, player.Money) == true)
                     {
-                        player.WithdrawMoney(itemToSell);
-                        trader.AddMoney(itemToSell);
-
-                        player.Inventory.AddItem(itemToSell);
-                        trader.ItemsToSell.RemoveItem(itemToSell);
+                        player.BuyItem(itemToSell);
+                        trader.SellItem(itemToSell);
                     }
                     else
                     {
@@ -41,14 +33,7 @@
 
         private bool CheckForMoneyPlayer(int price, int money)
         {
-            if (money >= price)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return money >= price;
         }
     }
 }

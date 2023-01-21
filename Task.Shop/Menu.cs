@@ -3,6 +3,7 @@ global using static System.ConsoleKey;
 global using Task.Shop.Products;
 global using Task.Shop.Weapons;
 global using Task.Shop.Pawns;
+using System.Numerics;
 
 namespace Task.Shop
 {
@@ -17,10 +18,11 @@ namespace Task.Shop
         {
             bool isGame = true;
 
-            Login(out string playerName, out int playerMoney);
+            Player player = Login();
 
-            Player player = new(playerName, playerMoney);
             Seller tradesman = new("Торговец всем, что под руку попало", 1653003030);
+
+            Shop marketplace = new();
 
             DeliverItemsToSeller(tradesman);
             Clear();
@@ -30,16 +32,16 @@ namespace Task.Shop
             while (isGame)
             {
                 WriteLine($"Денег в кармане: {player.Money}.");
-                ChooseCommand(in player, in tradesman, ref isGame);
+                ChooseCommand(in player, in tradesman, in marketplace, ref isGame);
             }
         }
 
-        private static void Login(out string playerName, out int playerMoney)
+        private static Player Login()
         {
             bool isLogin = false;
 
-            playerName = "NoneName";
-            playerMoney = 0;
+            string playerName = "NoneName";
+            int playerMoney = 0;
 
             while (isLogin == false)
             {
@@ -58,9 +60,13 @@ namespace Task.Shop
                     WriteLine("Введено неккоректное значение.");
                 }
             }
+
+            Player player = new(playerName, playerMoney);
+
+            return player;
         }
 
-        private static void ChooseCommand(in Player player, in Seller tradesman, ref bool isGame)
+        private static void ChooseCommand(in Player player, in Seller tradesman, in Shop marketplace, ref bool isGame)
         {
             DisplayCommand();
             Write("Что вы хотите сделать? ");
@@ -72,15 +78,15 @@ namespace Task.Shop
             switch (playerInput.Key)
             {
                 case CommandShowAllItemsToSell:
-                    tradesman.ItemsToSell.ShowAllItems();
+                    tradesman.ShowItemsInventory();
                     break;
 
                 case CommandBuyItem:
-                    Deal deal = new(tradesman, player);
+                    marketplace.SellItem(tradesman, player);
                     break;
 
                 case CommandShowPlayerInventory:
-                    player.Inventory.ShowAllItems();
+                    player.ShowItemsInventory();
                     break;
 
                 case CommandExit:
@@ -99,19 +105,19 @@ namespace Task.Shop
 
         private static void DeliverItemsToSeller(in Seller seller)
         {
-            seller.ItemsToSell.AddItem(new Food("Горячее крылышко", 154, "Кусочек жаренного крылышка какого-то бедолажного птенца.", "Очень свежее."));
-            seller.ItemsToSell.AddItem(new Food("Нежнятина", 1771, "Самый нежный стейк из кафельной говядины, это даже лучше, чем мраморная.", "Очень свежее."));
-            seller.ItemsToSell.AddItem(new Drink("Холодная штучка", 45, "Напиток от известного производителя - Вкусно и запятая.", 0.5f));
-            seller.ItemsToSell.AddItem(new Drink("Холодная штучка", 113, "Напиток от известного производителя - Вкусно и запятая.", 1f));
-            seller.ItemsToSell.AddItem(new Food("Буханка в буханке", 17, "Обычная буханка в буханке, пресно, зато недорого.", "Свежее."));
-            seller.ItemsToSell.AddItem(new Food("Буханка в буханке", 15, "Обычная буханка в буханке, пресно, зато недорого.", "Не очень свежее."));
-            seller.ItemsToSell.AddItem(new Food("Пакет травы", 7, "Вкусная, полезная и дешёвая.", "Свежее."));
-            seller.ItemsToSell.AddItem(new Food("Очень холодная зима", 77, "Мороженное, которое сделает ваш зимний денёк ещё приятнее.", "Свежее."));
-            seller.ItemsToSell.AddItem(new Knife("Мини-катана", 1320, "Маленькая, но смертоносная.", 110.0f, 9.2f));
-            seller.ItemsToSell.AddItem(new Knife("Нож-стрекоза", 700, "Лучше, чем нож-бабочка.", 25.0f, 10.1f));
-            seller.ItemsToSell.AddItem(new Pistol("Осиный гнев", 2776, "Компактный травматический пистолет, стреляет маленькими пулями. Тот, в кого стреляют, будет недоволен.", 12.0f, 30));
-            seller.ItemsToSell.AddItem(new Pistol("Лапа слона", 15087, "Очень мощный пистолет-дробовик, после выстрела откидывает и стреляющего, и того, в кого стреляют.", 100.0f, 8));
-            seller.ItemsToSell.AddItem(new Pistol("Ядерное лето", 52393, "Что тут говорить, гранатомёт он и в Мабритании гранотомёт. Только это пистолет-гранатомёт.", 1400.0f, 5));
+            seller.AddItemToSell(new Food("Горячее крылышко", 154, "Кусочек жаренного крылышка какого-то бедолажного птенца.", "Очень свежее."));
+            seller.AddItemToSell(new Food("Нежнятина", 1771, "Самый нежный стейк из кафельной говядины, это даже лучше, чем мраморная.", "Очень свежее."));
+            seller.AddItemToSell(new Drink("Холодная штучка", 45, "Напиток от известного производителя - Вкусно и запятая.", 0.5f));
+            seller.AddItemToSell(new Drink("Холодная штучка", 113, "Напиток от известного производителя - Вкусно и запятая.", 1f));
+            seller.AddItemToSell(new Food("Буханка в буханке", 17, "Обычная буханка в буханке, пресно, зато недорого.", "Свежее."));
+            seller.AddItemToSell(new Food("Буханка в буханке", 15, "Обычная буханка в буханке, пресно, зато недорого.", "Не очень свежее."));
+            seller.AddItemToSell(new Food("Пакет травы", 7, "Вкусная, полезная и дешёвая.", "Свежее."));
+            seller.AddItemToSell(new Food("Очень холодная зима", 77, "Мороженное, которое сделает ваш зимний денёк ещё приятнее.", "Свежее."));
+            seller.AddItemToSell(new Knife("Мини-катана", 1320, "Маленькая, но смертоносная.", 110.0f, 9.2f));
+            seller.AddItemToSell(new Knife("Нож-стрекоза", 700, "Лучше, чем нож-бабочка.", 25.0f, 10.1f));
+            seller.AddItemToSell(new Pistol("Осиный гнев", 2776, "Компактный травматический пистолет, стреляет маленькими пулями. Тот, в кого стреляют, будет недоволен.", 12.0f, 30));
+            seller.AddItemToSell(new Pistol("Лапа слона", 15087, "Очень мощный пистолет-дробовик, после выстрела откидывает и стреляющего, и того, в кого стреляют.", 100.0f, 8));
+            seller.AddItemToSell(new Pistol("Ядерное лето", 52393, "Что тут говорить, гранатомёт он и в Мабритании гранотомёт. Только это пистолет-гранатомёт.", 1400.0f, 5));
         }
     }
 }
