@@ -2,33 +2,27 @@
 {
     internal abstract class Pawn
     {
-        protected Inventory _inventory;
+        protected Inventory Inventory;
 
         public Pawn(string name, int money)
         {
             Name = name;
             Money = money;
-            _inventory = new Inventory();
+            Inventory = new Inventory();
         }
 
         public string Name { get; protected set; }
         public int Money { get; protected set; }
 
-        public virtual void SellItem(in Item itemOnSale)
-        {
-            Money += itemOnSale.Price;
-            _inventory.RemoveItem(itemOnSale);
-        }
-
         public virtual void BuyItem(in Item itemOnSale)
         {
             Money -= itemOnSale.Price;
-            _inventory.AddItem(itemOnSale);
+            Inventory.AddItem(itemOnSale);
         }
 
         public virtual void ShowItemsInventory()
         {
-            _inventory.ShowAllItems();
+            Inventory.ShowAllItems();
         }
     }
 }

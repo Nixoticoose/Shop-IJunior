@@ -48,7 +48,7 @@ namespace Task.Shop
 
             if (indexItem >= firstIndexElement && indexItem < _items.Count)
             {
-                if (_items.Contains(_items[indexItem]) == true)
+                if (_items.Contains(_items[indexItem]))
                 {
                     itemToGet = _items[indexItem];
 

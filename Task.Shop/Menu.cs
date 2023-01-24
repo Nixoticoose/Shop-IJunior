@@ -32,7 +32,7 @@ namespace Task.Shop
             while (isGame)
             {
                 WriteLine($"Денег в кармане: {player.Money}.");
-                ChooseCommand(in player, in tradesman, in marketplace, ref isGame);
+                isGame = ChooseCommand(in player, in tradesman, in marketplace);
             }
         }
 
@@ -66,12 +66,13 @@ namespace Task.Shop
             return player;
         }
 
-        private static void ChooseCommand(in Player player, in Seller tradesman, in Shop marketplace, ref bool isGame)
+        private static bool ChooseCommand(in Player player, in Seller tradesman, in Shop marketplace)
         {
             DisplayCommand();
             Write("Что вы хотите сделать? ");
 
             ConsoleKeyInfo playerInput = ReadKey();
+            bool isGame = true;
 
             Clear();
 
@@ -93,6 +94,8 @@ namespace Task.Shop
                     isGame = false;
                     break;
             }
+
+            return isGame;
         }
 
         private static void DisplayCommand()

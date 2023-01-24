@@ -6,12 +6,18 @@
 
         public bool TryGetItemByIndex(int indexItem, out Item itemToSell)
         {
-            return _inventory.TryGetItemByIndex(indexItem, out itemToSell);
+            return Inventory.TryGetItemByIndex(indexItem, out itemToSell);
+        }
+
+        public void SellItem(in Item itemOnSale)
+        {
+            Money += itemOnSale.Price;
+            Inventory.RemoveItem(itemOnSale);
         }
 
         public void AddItemToSell(in Item item)
         {
-            _inventory.AddItem(item);
+            Inventory.AddItem(item);
         }
     }
 }
